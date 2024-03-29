@@ -1,0 +1,9 @@
+# cache folder for gradle
+.gradle
+.idea
+
+# output folder for gradle
+build
+
+# destination for the bash tests
+testFolder

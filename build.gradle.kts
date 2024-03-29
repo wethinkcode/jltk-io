@@ -1,0 +1,78 @@
+plugins {
+    `java-library`
+    `maven-publish`
+    signing
+    id("io.github.gradle-nexus.publish-plugin") version "2.0.0-rc-2"
+
+    // Check for updates with ./gradlew dependencyUpdates
+    id("com.github.ben-manes.versions") version "0.51.0"
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation("org.junit.jupiter:junit-jupiter:5.10.2")
+    implementation("org.junit.jupiter:junit-jupiter-api:5.10.2")
+}
+
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(17))
+    }
+    withJavadocJar()
+    withSourcesJar()
+}
+
+tasks.named<Test>("test") {
+    useJUnitPlatform()
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("mavenJava") {
+            from(components["java"])
+            pom {
+                name.set("jltk")
+                description.set("The Java Learning ToolKit")
+                url.set("https://github.com/GeePawHill/jltk")
+                licenses {
+                    license {
+                        name.set("The MIT License")
+                        url.set("https://github.com/GeePawHill/jltk/blob/main/LICENSE")
+                    }
+                }
+                developers {
+                    developer {
+                        id.set("GeePawHill")
+                        name.set("GeePaw Hill")
+                        email.set("GeePawHill@geepawhill.org")
+                    }
+                }
+                scm {
+                    connection.set("git@github.com:GeePawHill/jltk.git")
+                    developerConnection.set("git@github.com:GeePawHill/jltk.git")
+                    url.set("https://github.com/GeePawHill/jltk.git")
+                }
+            }
+
+        }
+    }
+}
+
+nexusPublishing {
+    repositories {
+        sonatype {  //only for users registered in Sonatype after 24 Feb 2021
+            nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
+            snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
+        }
+    }
+}
+
+signing {
+    val signingKey: String? by project
+    val signingPassword: String? by project
+    useInMemoryPgpKeys(signingKey, signingPassword)
+    sign(publishing.publications["mavenJava"])
+}

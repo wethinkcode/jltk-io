@@ -1,12 +1,13 @@
+import com.vanniktech.maven.publish.SonatypeHost
+
 plugins {
     `java-library`
-    `maven-publish`
-    signing
-    id("io.github.gradle-nexus.publish-plugin") version "2.0.0-rc-2"
-
+    id("com.vanniktech.maven.publish") version "0.28.0"
     // Check for updates with ./gradlew dependencyUpdates
     id("com.github.ben-manes.versions") version "0.51.0"
 }
+
+version = "0.0.1"
 
 repositories {
     mavenCentral()
@@ -29,50 +30,33 @@ tasks.named<Test>("test") {
     useJUnitPlatform()
 }
 
-publishing {
-    publications {
-        create<MavenPublication>("mavenJava") {
-            from(components["java"])
-            pom {
-                name.set("jltk")
-                description.set("The Java Learning ToolKit")
-                url.set("https://github.com/GeePawHill/jltk")
-                licenses {
-                    license {
-                        name.set("The MIT License")
-                        url.set("https://github.com/GeePawHill/jltk/blob/main/LICENSE")
-                    }
-                }
-                developers {
-                    developer {
-                        id.set("GeePawHill")
-                        name.set("GeePaw Hill")
-                        email.set("GeePawHill@geepawhill.org")
-                    }
-                }
-                scm {
-                    connection.set("git@github.com:GeePawHill/jltk.git")
-                    developerConnection.set("git@github.com:GeePawHill/jltk.git")
-                    url.set("https://github.com/GeePawHill/jltk.git")
-                }
+
+mavenPublishing {
+    publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL, automaticRelease = true)
+    signAllPublications()
+
+    coordinates("za.co.wethinkcode","jltk-io","0.1.0")
+    pom {
+        name.set("jltk-io")
+        description.set("jltk-io Java Learning Toolkit I/O Library")
+        url.set("https://github.com/wethinkcode/jltk-io")
+        licenses {
+            license {
+                name.set("The MIT License")
+                url.set("https://github.com/wethinkcode/jltk-io/blob/main/LICENSE")
             }
-
+        }
+        developers {
+            developer {
+                id.set("wtcos")
+                name.set("WeThinkCode Open Source Team")
+                email.set("opensource@wethinkcode.ca.za")
+            }
+        }
+        scm {
+            connection.set("git@github.com:wethinkcode/jltk-io.git")
+            developerConnection.set("git@github.com:wethinkcode/jltk-io.git")
+            url.set("https://github.com/wethinkcode/jltk-io.git")
         }
     }
-}
-
-nexusPublishing {
-    repositories {
-        sonatype {  //only for users registered in Sonatype after 24 Feb 2021
-            nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
-            snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
-        }
-    }
-}
-
-signing {
-    val signingKey: String? by project
-    val signingPassword: String? by project
-    useInMemoryPgpKeys(signingKey, signingPassword)
-    sign(publishing.publications["mavenJava"])
 }

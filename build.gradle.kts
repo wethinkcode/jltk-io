@@ -7,8 +7,6 @@ plugins {
     id("com.github.ben-manes.versions") version "0.51.0"
 }
 
-version = "0.0.1"
-
 repositories {
     mavenCentral()
 }
@@ -22,8 +20,6 @@ java {
     toolchain {
         languageVersion.set(JavaLanguageVersion.of(17))
     }
-    withJavadocJar()
-    withSourcesJar()
 }
 
 tasks.named<Test>("test") {
@@ -35,7 +31,7 @@ mavenPublishing {
     publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL, automaticRelease = true)
     signAllPublications()
 
-    coordinates("za.co.wethinkcode","jltk-io","0.1.0")
+    coordinates("za.co.wethinkcode","jltk-io",version.toString())
     pom {
         name.set("jltk-io")
         description.set("jltk-io Java Learning Toolkit I/O Library")

@@ -5,16 +5,47 @@ import za.co.wethinkcode.prompt.*;
 import java.math.*;
 import java.util.*;
 
+/**
+ * The Io interface is designed to allow students to  use traditionl console I/O,
+ * without exposing them to exceptions, and in a fashion that makes microtesting
+ * easier.
+ *
+ * The functionality includes both output and input.
+ *
+ * On output, we have {@code println(...) } and {@code print(...) }. These function
+ * similarly to those found in {@link java.io.PrintStream}.
+ *
+ * In other words, code using {@code System.out.println(...) }should also work if
+ * called on * an instance of Io.
+ *
+ * On input, we have a single substantive function {@code prompt(...) } and a small set
+ * of convenience methods that call it. These functions will issue a prompt on the
+ * output, wait for the user to enter a satisfactory response -- possibly re-prompting
+ * as needed -- then return that correct response.
+ *
+ */
 public interface Io {
     /**
-     * Exactly identical to the behavior of PrintStream's println(String s)
+     * Print the given string to the output, adding a newline.
      *
-     * @param s
+     * @param s The string to be printed.
+     * @return this, to enable chaining.
      */
     Io println(String s);
 
+    /**
+     * Print newline to the output.
+     *
+     * @return this, to enable chaining.
+     */
     Io println();
 
+    /**
+     * Print the given string to the output.
+     *
+     * @param s The string to be printed.
+     * @return this, to enable chaining.
+     */
     Io print(String s);
 
     /**

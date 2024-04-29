@@ -11,38 +11,62 @@ public class StandardIo implements Io {
     private final InputStream in;
     private final PrintStream out;
 
+    /**
+     * Constructor to explicitly assign the input and output streams.
+     *
+     * @param in
+     * @param out
+     */
     public StandardIo(InputStream in, PrintStream out) {
         this.in = in;
         this.out = out;
     }
 
+    /**
+     * Constructor to implicitly use the normal {@link System.in} and {@link System.out} values.
+     */
     public StandardIo() {
         this(System.in, System.out);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Io println(String s) {
         out.println(s);
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Io println() {
         out.println();
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Io print(String s) {
         out.print(s);
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Prompt prompt(String text, Checker... checkers) {
         return new Prompt(in, out, text, checkers);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int anyInteger(String text) {
         Prompt prompt = prompt(text, new IntegerChecker());
@@ -50,6 +74,9 @@ public class StandardIo implements Io {
         return prompt.asInteger();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String anyString(String text) {
         Prompt prompt = prompt(text, new StringChecker());
@@ -57,6 +84,9 @@ public class StandardIo implements Io {
         return prompt.asString();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public double anyDouble(String text) {
         Prompt prompt = prompt(text, new DoubleChecker());
@@ -64,6 +94,9 @@ public class StandardIo implements Io {
         return prompt.asDouble();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public float anyFloat(String text) {
         Prompt prompt = prompt(text, new FloatChecker());
@@ -71,6 +104,9 @@ public class StandardIo implements Io {
         return prompt.asFloat();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public BigDecimal anyDecimal(String text) {
         Prompt prompt = prompt(text, new DecimalChecker());
@@ -78,6 +114,9 @@ public class StandardIo implements Io {
         return prompt.asDecimal();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String nonEmpty(String text) {
         Prompt prompt = prompt(text, new NonEmptyChecker());
@@ -85,6 +124,9 @@ public class StandardIo implements Io {
         return prompt.asString();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Reply> manyIntegers(String text, int howMany) {
         Checker[] checkers = new Checker[howMany];

@@ -28,7 +28,7 @@ import java.util.*;
  * <pre>
  *      Prompt rowPrompt = new Prompt("Please enter the row number: ",new IntegerChecker());
  *      rowPrompt.run();
- *      int rowNumer = rowPrompt.reply(0).asInteger();
+ *      int rowNumber = rowPrompt.reply(0).asInteger();
  * </pre>
  *
  * <p>That same effect can be achieved by this one-liner convenience function:</p>
@@ -51,6 +51,13 @@ public class Prompt {
     private final PrintStream out;
     private final Checker checker;
 
+    /**
+     * Full constructor
+     * @param in which inputstream to accept input on
+     * @param out which output stream to print prompt(s) on.
+     * @param text the text of the prompt
+     * @param checkers the list of checkers -- or'd if there's more than one
+     */
     public Prompt(InputStream in, PrintStream out, String text, Checker... checkers) {
         this.in = in;
         this.out = out;
@@ -58,42 +65,91 @@ public class Prompt {
         this.checker = Checker.safeChecker(checkers);
     }
 
+    /**
+     * Convenience constructor. As with the full constructor, except that {@code System.in} and
+     * {@code System.out} are assumed.
+     *
+     * @param text the text of the prompt
+     * @param checkers the list of checkers -- or'd together if more than one
+     */
     public Prompt(String text, Checker... checkers) {
-        this(null, null, text, checkers);
+        this(null,null, text, checkers);
     }
 
+    /**
+     * Get the index'th reply returned by this prompt.
+     * @param index which reply to return
+     * @return the given Reply object
+     */
     public Reply reply(int index) {
         return replies.get(index);
     }
 
+    /**
+     * Return the 0th reply from this prompt. Convenience method, as most prompts only have a single reply value.
+     * @return the first Reply
+     */
     public Reply asReply() {
         return reply(0);
     }
 
+    /**
+     *Return the full list of replies for this prompt.
+     * @return the entire list of replies
+     */
     public List<Reply> asReplies() {
         return replies;
     }
 
+    /**
+     * Return the 0th reply for this prompt as a String.
+     *
+     * @return what the user typed in reply
+     */
     public String asString() {
         return asReply().asString();
     }
 
+    /**
+     * Return the 0th reply for this prompt as an Integer
+     *
+     * @return what the user typed in reply, converted to Integer
+     */
     public int asInteger() {
         return asReply().asInteger();
     }
 
+    /**
+     * Return the 0th reply for this prompt as a float
+     *
+     * @return what the user typed in reply, converted to float
+     */
     public float asFloat() {
         return asReply().asFloat();
     }
 
+    /**
+     * Return the 0th reply for this prompt as a Double
+     *
+     * @return what the user typed in reply, converted to Double
+     */
     public double asDouble() {
         return asReply().asDouble();
     }
 
+    /**
+     * Return the 0th reply for this prompt as a Double
+     *
+     * @return what the user typed in reply, converted to Double
+     */
     public BigDecimal asDecimal() {
         return asReply().asDecimal();
     }
 
+    /**
+     * Actually run the prompt, causing its text to be output, the gathering of a reply, and the checking that
+     * the reply passes the checker(s).
+     */
     public void run() {
         while (true) {
             chooseOut().print(text);
@@ -110,12 +166,6 @@ public class Prompt {
     private PrintStream chooseOut() {
         if (out == null) return System.out;
         return out;
-    }
-
-    public static int anyInteger(String text) {
-        Prompt prompt = new Prompt(text, new IntegerChecker());
-        prompt.run();
-        return prompt.asInteger();
     }
 
 }

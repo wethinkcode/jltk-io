@@ -18,14 +18,17 @@ public class SeriesChecker implements Checker {
     /**
      * Constructor to set the regex string and the list of checkers.
      *
-     * @param regex    -- Same format as for {@link java.lang.String#split}
-     * @param checkers -- One or more other checkers, to be evaluated in sequence
+     * @param regex Same format as for {@link java.lang.String#split}
+     * @param checkers One or more other checkers, to be evaluated in sequence
      */
     public SeriesChecker(String regex, Checker... checkers) {
         this.regex = regex;
         this.checkers = checkers;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isSatisfied(String candidate, ArrayList<Reply> replies) {
         String[] tokens = candidate.split(regex, checkers.length);

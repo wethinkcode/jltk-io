@@ -2,6 +2,12 @@ package za.co.wethinkcode.prompt;
 
 import java.math.*;
 
+/**
+ * A class to hold an arbitrary String and convert it using the asX methods.
+ *
+ * The String should have already been validated for the given asX type, because
+ * these parsing methods can throw.
+ */
 public class Reply {
 
     private final String text;

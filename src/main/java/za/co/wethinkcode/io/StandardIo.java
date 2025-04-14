@@ -23,7 +23,7 @@ public class StandardIo implements Io {
     }
 
     /**
-     * Constructor to implicitly use the normal {@link System.in} and {@link System.out} values.
+     * Constructor to implicitly use the normal System.in and System.out values.
      */
     public StandardIo() {
         this(System.in, System.out);

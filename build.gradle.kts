@@ -1,10 +1,8 @@
-import com.vanniktech.maven.publish.SonatypeHost
-
 plugins {
     `java-library`
-    id("com.vanniktech.maven.publish") version "0.28.0"
     // Check for updates with ./gradlew dependencyUpdates
     id("com.github.ben-manes.versions") version "0.51.0"
+    id("io.deepmedia.tools.deployer") version "0.16.0"
 }
 
 repositories {
@@ -18,7 +16,11 @@ dependencies {
 
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(17))
+        languageVersion.set(JavaLanguageVersion.of(21))
+    }
+    java {
+        withJavadocJar()
+        withSourcesJar()
     }
 }
 
@@ -27,32 +29,37 @@ tasks.named<Test>("test") {
 }
 
 
-mavenPublishing {
-    publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL, automaticRelease = true)
-    signAllPublications()
+deployer {
+    // 1. Artifact definition.
+    // https://opensource.deepmedia.io/deployer/artifacts
+    content {
+        component {
+            fromJava()
+        }
+    }
 
-    coordinates("za.co.wethinkcode","jltk-io",version.toString())
-    pom {
-        name.set("jltk-io")
-        description.set("jltk-io Java Learning Toolkit I/O Library")
+    // 2. Project details.
+    // https://opensource.deepmedia.io/deployer/configuration
+    projectInfo {
+        version = project.version.toString()
+        description.set("jltk-io -- Java Learning Toolkit Console I/O Library.")
         url.set("https://github.com/wethinkcode/jltk-io")
-        licenses {
-            license {
-                name.set("The MIT License")
-                url.set("https://github.com/wethinkcode/jltk-io/blob/main/LICENSE")
-            }
-        }
-        developers {
-            developer {
-                id.set("wtcos")
-                name.set("WeThinkCode Open Source Team")
-                email.set("opensource@wethinkcode.ca.za")
-            }
-        }
-        scm {
-            connection.set("git@github.com:wethinkcode/jltk-io.git")
-            developerConnection.set("git@github.com:wethinkcode/jltk-io.git")
-            url.set("https://github.com/wethinkcode/jltk-io.git")
-        }
+        scm.fromGithub("wethinkcode", "jltk-io")
+        license(MIT)
+        developer("wtcos", "opensource@wethinkcode.co.za", "WeThinkCode", "https://wethinkcode.co.za")
+        groupId.set("za.co.wethinkcode")
+    }
+
+    localSpec {
+
+    }
+
+    // 3. Central Portal configuration.
+    // https://opensource.deepmedia.io/deployer/repos/central-portal
+    centralPortalSpec {
+        signing.key.set(secret("SIGNING_KEY"))
+        signing.password.set(secret("SIGNING_PASSPHRASE"))
+        auth.user.set(secret("UPLOAD_USERNAME"))
+        auth.password.set(secret("UPLOAD_PASSWORD"))
     }
 }

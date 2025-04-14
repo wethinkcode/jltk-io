@@ -7,3 +7,4 @@ build
 
 # destination for the bash tests
 testFolder
+release.sh
